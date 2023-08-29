@@ -1,7 +1,7 @@
 {
   "name": "pokemon",
   "version": "0.1.0",
-  "homepage": "http://r-gabriel-f.github.io/pokemon",
+  "homepage": "http://r-gabriel-f.github.io/pokemon/",
   "private": true,
   "dependencies": {
     "@testing-library/jest-dom": "^5.17.0",
