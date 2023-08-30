@@ -2,8 +2,8 @@ import React from "react";
 
 const PokemonLightbox = ({ pokemonData, onClose }) => {
   return (
-    <div className="fixed inset-0 flex items-center justify-center">
-      <div className="bg-carta bg-cover bg-center p-4 rounded-lg relative shadow-lg">
+    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+      <div className="bg-carta bg-cover bg-center w-96 p-4 rounded-lg relative shadow-lg">
         <div className="bg-black bg-opacity-50 text-white rounded-lg">
           <button
             onClick={onClose}
