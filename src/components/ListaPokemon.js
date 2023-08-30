@@ -19,6 +19,7 @@ const ListaPokemon = ({ searchTerm }) => {
           return data;
         })
       );
+      console.log(promises);
       setData(promises);
     } catch (error) {
       console.error("Error fetching data:", error);
@@ -49,6 +50,21 @@ const ListaPokemon = ({ searchTerm }) => {
 
   const totalPages = Math.ceil(filteredData.length / itemsPerPage);
 
+  const typesFrequency = {}; // Objeto para contar la frecuencia de cada tipo
+
+  // Calcula la frecuencia de cada tipo
+  data.forEach((pokemon) => {
+    pokemon.types.forEach((type) => {
+      const typeName = type.type.name;
+      if (typesFrequency[typeName]) {
+        typesFrequency[typeName]++;
+      } else {
+        typesFrequency[typeName] = 1;
+      }
+    });
+  });
+
+  console.log("Frecuencia de tipos:", typesFrequency);
   return (
     <section className="px-8 my-4">
       <ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -65,6 +81,19 @@ const ListaPokemon = ({ searchTerm }) => {
                 alt={`Pokemon ${index + 1}`}
               />
               <p className="font-bold ml-2 ">{val.name}</p>
+              <div className="flex flex-col mt-2">
+                {val.types.map((type, typeIndex) =>(
+                  <button
+                    key={typeIndex}
+                    className={`bg-${type.type.name} py-2 px-4 rounded`}
+                  >
+                    {type.type.name}
+                    
+                  </button>
+                  
+                ))}
+                
+              </div>
             </div>
           </li>
         ))}
