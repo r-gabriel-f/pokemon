@@ -13,7 +13,7 @@ const Buscador = ({ onSearch }) => {
 
   return (
     <>
-      <div className="p-8 flex flex-col md:flex-row items-center">
+      <div className="m-8 flex flex-col md:flex-row items-center">
         <img src={poke} className="w-32 md:w-52" alt="logo" />
 
         <input

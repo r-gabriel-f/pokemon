@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
 
-const ListaPokemon = ({ searchTerm }) => {
+const ListaPokemon = ({ searchTerm, setTypesFrequency, selectedType, minValue, maxValue }) => {
   const itemsPerPage = 12;
   const [paginaActual, setPaginaActual] = useState(0);
+ 
   const [data, setData] = useState([]);
 
   const fetchPokemonData = async () => {
@@ -29,16 +30,47 @@ const ListaPokemon = ({ searchTerm }) => {
   useEffect(() => {
     fetchPokemonData();
   }, []);
+  const TypesFrequency = (pokemonData) => {
+    const newTypesFrequency = {};
+    pokemonData.forEach((pokemon) => {
+      pokemon.types.forEach((type) => {
+        const typeName = type.type.name;
+        if (newTypesFrequency[typeName]) {
+          newTypesFrequency[typeName]++;
+        } else {
+          newTypesFrequency[typeName] = 1;
+        }
+      });
+    });
+    setTypesFrequency(newTypesFrequency);
+  };
+  useEffect(() => {
+    TypesFrequency(data);
+  }, [data]);
+
+
 
   const filteredData = data.filter((pokemon) =>
     pokemon.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
+  // Filtrar por tipo
+  const filteredByType = selectedType
+    ? filteredData.filter((pokemon) =>
+        pokemon.types.some((type) => type.type.name === selectedType)
+      )
+    : filteredData;
+
+  // Filtrar por rango de altura
+  const filteredByHeight = minValue && maxValue
+    ? filteredByType.filter((pokemon) =>
+        pokemon.height >= minValue && pokemon.height <= maxValue
+      )
+    : filteredByType;
+
   const startIndex = itemsPerPage * paginaActual;
-  const displayedData = filteredData.slice(
-    startIndex,
-    startIndex + itemsPerPage
-  );
+  const endIndex = startIndex + itemsPerPage;
+  const displayedData = filteredByHeight.slice(startIndex, endIndex);
 
   const goToNextPage = () => {
     setPaginaActual(paginaActual + 1);
@@ -48,25 +80,11 @@ const ListaPokemon = ({ searchTerm }) => {
     setPaginaActual(paginaActual - 1);
   };
 
-  const totalPages = Math.ceil(filteredData.length / itemsPerPage);
+  const totalPages = Math.ceil(filteredByHeight.length / itemsPerPage);
 
-  const typesFrequency = {}; // Objeto para contar la frecuencia de cada tipo
 
-  // Calcula la frecuencia de cada tipo
-  data.forEach((pokemon) => {
-    pokemon.types.forEach((type) => {
-      const typeName = type.type.name;
-      if (typesFrequency[typeName]) {
-        typesFrequency[typeName]++;
-      } else {
-        typesFrequency[typeName] = 1;
-      }
-    });
-  });
-
-  console.log("Frecuencia de tipos:", typesFrequency);
   return (
-    <section className="px-8 my-4">
+    <section className="mx-8 mt-4">
       <ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         {displayedData.map((val, index) => (
           <li
@@ -80,19 +98,17 @@ const ListaPokemon = ({ searchTerm }) => {
                 className="ml-2"
                 alt={`Pokemon ${index + 1}`}
               />
+              <div className="flex  flex-col mt-2">
               <p className="font-bold ml-2 ">{val.name}</p>
-              <div className="flex flex-col mt-2">
-                {val.types.map((type, typeIndex) =>(
+              
+                {val.types.map((type, typeIndex) => (
                   <button
                     key={typeIndex}
                     className={`bg-${type.type.name} py-2 px-4 rounded`}
                   >
                     {type.type.name}
-                    
                   </button>
-                  
                 ))}
-                
               </div>
             </div>
           </li>
