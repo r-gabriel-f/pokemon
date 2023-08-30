@@ -26,6 +26,7 @@ module.exports = {
       
       backgroundImage: {
         'fondo': "url('/src/assetes/fondo.png')",
+        'carta': "url('/src/assetes/carta.png')",
      
       },
       

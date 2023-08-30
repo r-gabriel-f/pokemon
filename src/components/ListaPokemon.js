@@ -1,11 +1,15 @@
 import React, { useState, useEffect } from "react";
+import PokemonLightbox from "./PokemonLightbox";
 
-const ListaPokemon = ({ searchTerm, setTypesFrequency, selectedType, minValue, maxValue }) => {
+const ListaPokemon = ({ searchTerm, setTypesFrequency, selectedType }) => {
   const itemsPerPage = 12;
   const [paginaActual, setPaginaActual] = useState(0);
  
   const [data, setData] = useState([]);
-
+  const [minValue] = useState(null);
+  const [maxValue] = useState(null);
+  const [showLightbox, setShowLightbox] = useState(false);
+  const [selectedPokemon, setSelectedPokemon] = useState(null);
   const fetchPokemonData = async () => {
     try {
       const res = await fetch(
@@ -21,6 +25,7 @@ const ListaPokemon = ({ searchTerm, setTypesFrequency, selectedType, minValue, m
         })
       );
       console.log(promises);
+      
       setData(promises);
     } catch (error) {
       console.error("Error fetching data:", error);
@@ -46,22 +51,16 @@ const ListaPokemon = ({ searchTerm, setTypesFrequency, selectedType, minValue, m
   };
   useEffect(() => {
     TypesFrequency(data);
-  }, [data]);
-
-
+  }, );
 
   const filteredData = data.filter((pokemon) =>
     pokemon.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
-
-  // Filtrar por tipo
   const filteredByType = selectedType
     ? filteredData.filter((pokemon) =>
         pokemon.types.some((type) => type.type.name === selectedType)
       )
     : filteredData;
-
-  // Filtrar por rango de altura
   const filteredByHeight = minValue && maxValue
     ? filteredByType.filter((pokemon) =>
         pokemon.height >= minValue && pokemon.height <= maxValue
@@ -82,7 +81,17 @@ const ListaPokemon = ({ searchTerm, setTypesFrequency, selectedType, minValue, m
 
   const totalPages = Math.ceil(filteredByHeight.length / itemsPerPage);
 
+  
 
+  const handleOpenLightbox = (pokemon) => {
+    setSelectedPokemon(pokemon);
+    setShowLightbox(true);
+  };
+
+  const handleCloseLightbox = () => {
+    setShowLightbox(false);
+    setSelectedPokemon(null);
+  };
   return (
     <section className="mx-8 mt-4">
       <ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -90,6 +99,7 @@ const ListaPokemon = ({ searchTerm, setTypesFrequency, selectedType, minValue, m
           <li
             key={index}
             className="flex justify-center border-2 border rounded-lg cursor-pointer bg-black bg-opacity-50"
+            onClick={() => handleOpenLightbox(val)}
           >
             <div className="flex items-center text-white">
               <p className="font-bold mx-2">N° {index + 1}</p>
@@ -133,6 +143,12 @@ const ListaPokemon = ({ searchTerm, setTypesFrequency, selectedType, minValue, m
           Siguiente
         </button>
       </div>
+      {showLightbox && (
+        <PokemonLightbox
+          pokemonData={selectedPokemon}
+          onClose={handleCloseLightbox}
+        />
+      )}
     </section>
   );
 };
