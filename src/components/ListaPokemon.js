@@ -1,53 +1,29 @@
 import React, { useState, useEffect } from "react";
 import PokemonLightbox from "./PokemonLightbox";
 
-const ListaPokemon = ({ searchTerm, setTypesFrequency, selectedType }) => {
+const ListaPokemon = ({data, searchTerm, setTypesFrequency, selectedType }) => {
   const itemsPerPage = 12;
   const [paginaActual, setPaginaActual] = useState(0);
  
-  const [data, setData] = useState([]);
+ 
   const [minValue] = useState(null);
   const [maxValue] = useState(null);
   const [showLightbox, setShowLightbox] = useState(false);
   const [selectedPokemon, setSelectedPokemon] = useState(null);
-  const fetchPokemonData = async () => {
-    try {
-      const res = await fetch(
-        "https://pokeapi.co/api/v2/pokemon?limit=1273&offset=0"
-      );
-      const responseJson = await res.json();
+  
+  const TypesFrequency = () => {
+    const uniqueTypeNames = new Set();
 
-      const promises = await Promise.all(
-        responseJson.results.map(async (pokemon) => {
-          const res = await fetch(pokemon.url);
-          const data = await res.json();
-          return data;
-        })
-      );
-      console.log(promises);
-      
-      setData(promises);
-    } catch (error) {
-      console.error("Error fetching data:", error);
-    }
-  };
-
-  useEffect(() => {
-    fetchPokemonData();
-  }, []);
-  const TypesFrequency = (pokemonData) => {
-    const newTypesFrequency = {};
-    pokemonData.forEach((pokemon) => {
+    data.forEach((pokemon) => {
       pokemon.types.forEach((type) => {
         const typeName = type.type.name;
-        if (newTypesFrequency[typeName]) {
-          newTypesFrequency[typeName]++;
-        } else {
-          newTypesFrequency[typeName] = 1;
-        }
+        uniqueTypeNames.add(typeName);
       });
     });
-    setTypesFrequency(newTypesFrequency);
+
+    const typeNamesArray = Array.from(uniqueTypeNames);
+    // Llama a setTypesFrequency para actualizar typesFrequency
+    setTypesFrequency(typeNamesArray);
   };
   useEffect(() => {
     TypesFrequency(data);

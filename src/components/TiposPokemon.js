@@ -15,7 +15,7 @@ export const TiposPokemon = ({ typesFrequency, setSelectedType }) => {
         Todos
       </label>
     </div>,
-    ...Object.keys(typesFrequency).map((typeName, index) => (
+    (typesFrequency).map((typeName, index) => (
       <div key={index} className="flex items-center m-5">
         <input
           type="radio"
