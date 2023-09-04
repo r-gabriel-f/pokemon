@@ -1,16 +1,21 @@
 import React, { useState, useEffect } from "react";
 import PokemonLightbox from "./PokemonLightbox";
 
-const ListaPokemon = ({data, searchTerm, setTypesFrequency, selectedType }) => {
+const ListaPokemon = ({
+  data,
+  searchTerm,
+  setTypesFrequency,
+  selectedType,
+}) => {
+  console.log(data + "est");
   const itemsPerPage = 12;
   const [paginaActual, setPaginaActual] = useState(0);
- 
- 
+
   const [minValue] = useState(null);
   const [maxValue] = useState(null);
   const [showLightbox, setShowLightbox] = useState(false);
   const [selectedPokemon, setSelectedPokemon] = useState(null);
-  
+
   const TypesFrequency = () => {
     const uniqueTypeNames = new Set();
 
@@ -20,28 +25,39 @@ const ListaPokemon = ({data, searchTerm, setTypesFrequency, selectedType }) => {
         uniqueTypeNames.add(typeName);
       });
     });
-
     const typeNamesArray = Array.from(uniqueTypeNames);
-    // Llama a setTypesFrequency para actualizar typesFrequency
     setTypesFrequency(typeNamesArray);
   };
-  useEffect(() => {
-    TypesFrequency(data);
-  }, );
 
-  const filteredData = data.filter((pokemon) =>
-    pokemon.name.toLowerCase().includes(searchTerm.toLowerCase())
-  );
-  const filteredByType = selectedType
-    ? filteredData.filter((pokemon) =>
-        pokemon.types.some((type) => type.type.name === selectedType)
-      )
-    : filteredData;
-  const filteredByHeight = minValue && maxValue
-    ? filteredByType.filter((pokemon) =>
-        pokemon.height >= minValue && pokemon.height <= maxValue
-      )
-    : filteredByType;
+  useEffect(() => {
+    TypesFrequency();
+  });
+
+  const filterByName = (data, searchTerm) => {
+    return data.filter((pokemon) =>
+      pokemon.name.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+  };
+
+  const filterByType = (data, selectedType) => {
+    return selectedType
+      ? data.filter((pokemon) =>
+          pokemon.types.some((type) => type.type.name === selectedType)
+        )
+      : data;
+  };
+
+  const filterByHeight = (data, minValue, maxValue) => {
+    return minValue && maxValue
+      ? data.filter(
+          (pokemon) => pokemon.height >= minValue && pokemon.height <= maxValue
+        )
+      : data;
+  };
+
+  const filteredData = filterByName(data, searchTerm);
+  const filteredByType = filterByType(filteredData, selectedType);
+  const filteredByHeight = filterByHeight(filteredByType, minValue, maxValue);
 
   const startIndex = itemsPerPage * paginaActual;
   const endIndex = startIndex + itemsPerPage;
@@ -57,8 +73,6 @@ const ListaPokemon = ({data, searchTerm, setTypesFrequency, selectedType }) => {
 
   const totalPages = Math.ceil(filteredByHeight.length / itemsPerPage);
 
-  
-
   const handleOpenLightbox = (pokemon) => {
     setSelectedPokemon(pokemon);
     setShowLightbox(true);
@@ -68,6 +82,7 @@ const ListaPokemon = ({data, searchTerm, setTypesFrequency, selectedType }) => {
     setShowLightbox(false);
     setSelectedPokemon(null);
   };
+
   return (
     <section className="mx-8 mt-4">
       <ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -85,16 +100,7 @@ const ListaPokemon = ({data, searchTerm, setTypesFrequency, selectedType }) => {
                 alt={`Pokemon ${index + 1}`}
               />
               <div className="flex  flex-col mt-2">
-              <p className="font-bold ml-2 ">{val.name}</p>
-              
-                {val.types.map((type, typeIndex) => (
-                  <button
-                    key={typeIndex}
-                    className={`bg-${type.type.name} py-2 px-4 rounded`}
-                  >
-                    {type.type.name}
-                  </button>
-                ))}
+                <p className="font-bold ml-2 ">{val.name}</p>
               </div>
             </div>
           </li>
