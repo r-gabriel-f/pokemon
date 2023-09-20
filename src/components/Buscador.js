@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import poke from "../assetes/logo.png";
-import bola from "../assetes/bola.png";
+import poke from "../assetes/logo.webp";
+import bola from "../assetes/bola.webp";
 
 const Buscador = ({ onSearch }) => {
   const [searchTerm, setSearchTerm] = useState("");
