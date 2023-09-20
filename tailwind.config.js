@@ -26,6 +26,7 @@ module.exports = {
       
       backgroundImage: {
         'fondo': "url('/src/assetes/fondo.webp')",    
+        'carta': "url('/src/assetes/carta.webp')",    
       },
       
     },

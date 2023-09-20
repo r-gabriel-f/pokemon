@@ -7,7 +7,6 @@ const ListaPokemon = ({
   setTypesFrequency,
   selectedType,
 }) => {
-  console.log(data + "est");
   const itemsPerPage = 12;
   const [paginaActual, setPaginaActual] = useState(0);
 
@@ -31,7 +30,7 @@ const ListaPokemon = ({
 
   useEffect(() => {
     TypesFrequency();
-  });
+  },);
 
   const filterByName = (data, searchTerm) => {
     return data.filter((pokemon) =>
