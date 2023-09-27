@@ -14,8 +14,7 @@ const ListaPokemon = ({
   const [maxValue] = useState(null);
   const [showLightbox, setShowLightbox] = useState(false);
   const [selectedPokemon, setSelectedPokemon] = useState(null);
-
-  const TypesFrequency = () => {
+  useEffect(() => {
     const uniqueTypeNames = new Set();
 
     data.forEach((pokemon) => {
@@ -26,11 +25,9 @@ const ListaPokemon = ({
     });
     const typeNamesArray = Array.from(uniqueTypeNames);
     setTypesFrequency(typeNamesArray);
-  };
 
-  useEffect(() => {
-    TypesFrequency();
-  },);
+    setPaginaActual(0);
+  }, [data, setTypesFrequency, selectedType]);
 
   const filterByName = (data, searchTerm) => {
     return data.filter((pokemon) =>
@@ -81,6 +78,9 @@ const ListaPokemon = ({
     setShowLightbox(false);
     setSelectedPokemon(null);
   };
+  const isPreviousButtonDisabled = paginaActual === 0;
+  const isNextButtonDisabled =
+    startIndex + itemsPerPage >= filteredData.length || totalPages === 1;
 
   return (
     <section className="mx-8 mt-4">
@@ -108,8 +108,10 @@ const ListaPokemon = ({
       <div className="flex items-center my-5 justify-center">
         <button
           onClick={goToPreviousPage}
-          disabled={paginaActual === 0}
-          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+          disabled={isPreviousButtonDisabled}
+          className={`bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded ${
+            isPreviousButtonDisabled ? "opacity-50 cursor-not-allowed" : ""
+          }`}
         >
           Atras
         </button>
@@ -118,8 +120,10 @@ const ListaPokemon = ({
         } of ${totalPages}`}</span>
         <button
           onClick={goToNextPage}
-          disabled={startIndex + itemsPerPage >= filteredData.length}
-          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+          disabled={isNextButtonDisabled}
+          className={`bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded ${
+            isNextButtonDisabled ? "opacity-50 cursor-not-allowed" : ""
+          }`}
         >
           Siguiente
         </button>

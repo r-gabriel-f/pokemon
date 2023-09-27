@@ -6,7 +6,7 @@ export const Datos = () => {
   const fetchPokemonData = async () => {
     try {
       const res = await fetch(
-        "https://pokeapi.co/api/v2/pokemon?limit=1273&offset=0"
+        "https://pokeapi.co/api/v2/pokemon?limit=150"
       );
       const responseJson = await res.json();
 
