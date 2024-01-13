@@ -1,5 +1,5 @@
 import React from "react";
-
+import { LazyLoadImage } from 'react-lazy-load-image-component';
 const PokemonLightbox = ({ pokemonData, onClose }) => {
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
@@ -16,7 +16,7 @@ const PokemonLightbox = ({ pokemonData, onClose }) => {
             N°: {pokemonData.id}
           </p>
 
-          <img
+          <LazyLoadImage
             src={pokemonData.sprites.front_default}
             alt={`Pokemon ${pokemonData.name}`}
             className="mx-auto mt-2"
