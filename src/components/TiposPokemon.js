@@ -33,7 +33,7 @@ export const TiposPokemon = ({ typesFrequency, setSelectedType }) => {
   ];
 
   return (
-    <div className=" text-white mx-8 border-2 border rounded-lg bg-black bg-opacity-50 text-white ">
+    <div className=" text-white mx-8 border-2 rounded-lg bg-black bg-opacity-50">
       <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-10  gap-4 mt-4 ">
         {typeRadioButtons}
       </div>
