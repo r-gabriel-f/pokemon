@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import PokemonLightbox from "./PokemonLightbox";
-
+import { LazyLoadImage } from 'react-lazy-load-image-component';
 const ListaPokemon = ({
   data,
   searchTerm,
@@ -88,12 +88,12 @@ const ListaPokemon = ({
         {displayedData.map((val, index) => (
           <li
             key={index}
-            className="flex justify-center border-2 border rounded-lg cursor-pointer bg-black bg-opacity-50"
+            className="flex justify-center border-2 rounded-lg cursor-pointer bg-black bg-opacity-50"
             onClick={() => handleOpenLightbox(val)}
           >
             <div className="flex items-center text-white">
               <p className="font-bold mx-2">N° {index + 1}</p>
-              <img
+              <LazyLoadImage
                 src={val.sprites.front_default}
                 className="ml-2"
                 alt={`Pokemon ${index + 1}`}
